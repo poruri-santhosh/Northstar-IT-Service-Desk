@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b1728">
+    <meta name="description" content="A focused service desk for incident intake, triage, and SLA tracking.">
+    <title>Northstar — IT Service Desk</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="/" aria-label="Northstar home">
+          <span class="brand-mark">N</span>
+          <span><strong>northstar</strong><small>IT SERVICE DESK</small></span>
+        </a>
+        <div class="workspace-label">WORKSPACE</div>
+        <a class="nav-item active" href="#overview"><span class="nav-icon">◫</span> Overview</a>
+        <a class="nav-item" href="#tickets"><span class="nav-icon">▤</span> All tickets <span class="nav-count" id="nav-count">0</span></a>
+        <div class="sidebar-bottom">
+          <div class="system-card"><span class="status-dot"></span><span><strong>All systems operational</strong><small>Service desk is online</small></span></div>
+          <div class="profile"><span class="avatar">IT</span><span><strong>Service team</strong><small>Workspace admin</small></span><span class="profile-more">···</span></div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="overview">
+        <header class="topbar">
+          <div class="breadcrumbs">Workspace <span>/</span> <strong>Overview</strong></div>
+          <div class="topbar-right"><span class="live-label"><span class="status-dot"></span> Live workspace</span><span class="avatar small">IT</span></div>
+        </header>
+        <section class="page-heading">
+          <div>          <p class="eyebrow" id="current-date"></p><h1>Good morning, team <span class="wave">✳</span></h1><p class="subheading">Here’s what’s happening across your service desk today.</p></div>
+          <button class="button button-primary" id="open-ticket"><span>＋</span> New ticket</button>
+        </section>
+
+        <section class="metrics" aria-label="Ticket summary">
+          <article class="metric-card"><div class="metric-top"><span class="metric-label">Open tickets</span><span class="metric-icon blue">▤</span></div><div class="metric-value" id="open-count">—</div><div class="metric-foot"><span class="metric-caption">Awaiting resolution</span></div></article>
+          <article class="metric-card"><div class="metric-top"><span class="metric-label">Critical priority</span><span class="metric-icon red">↗</span></div><div class="metric-value" id="critical-count">—</div><div class="metric-foot"><span class="priority-dot p1"></span><span class="metric-caption">P1 incidents need attention</span></div></article>
+          <article class="metric-card"><div class="metric-top"><span class="metric-label">In progress</span><span class="metric-icon amber">◷</span></div><div class="metric-value" id="progress-count">—</div><div class="metric-foot"><span class="metric-caption">Currently being worked on</span></div></article>
+          <article class="metric-card"><div class="metric-top"><span class="metric-label">Resolved</span><span class="metric-icon green">✓</span></div><div class="metric-value" id="resolved-count">—</div><div class="metric-foot"><span class="metric-caption">All-time completed tickets</span></div></article>
+        </section>
+
+        <section class="ticket-panel" id="tickets">
+          <div class="panel-heading"><div><h2>Recent tickets</h2><p>Your team’s latest requests, sorted by urgency.</p></div><button class="button button-secondary" id="refresh-tickets" aria-label="Refresh tickets">↻ <span>Refresh</span></button></div>
+          <div class="toolbar"><div class="filter-tabs" role="group" aria-label="Filter tickets"><button class="filter-tab selected" data-filter="All">All tickets</button><button class="filter-tab" data-filter="Open">Open</button><button class="filter-tab" data-filter="In Progress">In progress</button><button class="filter-tab" data-filter="Resolved">Resolved</button></div><span class="result-count" id="result-count"></span></div>
+          <div class="table-scroll"><table><thead><tr><th>Ticket</th><th>Requester</th><th>Category</th><th>Priority</th><th>Status</th><th>SLA deadline</th><th></th></tr></thead><tbody id="ticket-rows"><tr><td colspan="7" class="empty-state">Loading tickets…</td></tr></tbody></table></div>
+          <div class="panel-footer"><span id="table-summary">Your ticket queue</span><button class="text-button" id="show-all">View all tickets <span>→</span></button></div>
+        </section>
+        <footer class="page-footer"><span>Northstar Service Desk</span><span>Private workspace <span class="footer-dot">·</span> Data stored locally</span></footer>
+      </main>
+    </div>
+
+    <dialog id="ticket-dialog" class="ticket-dialog">
+      <form id="ticket-form">
+        <div class="dialog-heading"><div><p class="eyebrow">INCIDENT INTAKE</p><h2>Create a ticket</h2><p>Tell us what’s happening and we’ll route it to the right priority.</p></div><button type="button" class="icon-button" id="close-dialog" aria-label="Close">×</button></div>
+        <label>Requester name<input name="reporter_name" required maxlength="200" placeholder="e.g. Alex Morgan"></label>
+        <div class="form-row"><label>Department<input name="department" required maxlength="200" placeholder="e.g. Operations"></label><label>Category<select name="category" required><option value="" disabled selected>Select category</option><option>Access</option><option>Email</option><option>Hardware</option><option>Network</option><option>Software</option><option>Other</option></select></label></div>
+        <label>What’s the issue?<textarea name="issue_description" required maxlength="2000" rows="4" placeholder="Describe the issue and any steps you’ve already tried…"></textarea></label>
+        <div class="form-note"><span>✦</span> Priority and SLA are automatically assigned based on the issue.</div>
+        <p class="form-error" id="form-error" role="alert"></p>
+        <div class="dialog-actions"><button type="button" class="button button-secondary" id="cancel-dialog">Cancel</button><button type="submit" class="button button-primary" id="submit-ticket">Create ticket <span>→</span></button></div>
+      </form>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
